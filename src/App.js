@@ -6,38 +6,66 @@ import Todolist from "./components/Todolist";
 import ReactDOM from "react-dom"
 import render from 'react-dom';
 
-
 class App extends Component {
   state = {
-    items:[{id:1, title:"wake up"},{id:2, title:"make breakfast"}],
+    items:[],
     id: uuidv4(),
     item:"",
     editItem: false
   };
 
   handleChange = e => {
-    console.log ('handle change');
+    this.setState({
+      item: e.target.value    
+  });
   };
   handleSubmit = e =>{
-    console.log ('handle Submit');
+    e.preventDefault();
+    const newItem ={
+      id:this.state.id,
+      title:this.state.item
+    }
+    const updatedItems = [...this.state.items,newItem]
+    this.setState({
+      items:updatedItems,
+      item:"",
+      id:uuidv4(),
+      editItem:false
+    }, 
+    );
   };
   clearList = () => {
-    console.log ('clear List');
+    this.setState({
+      items: []
+    })
   };
   handleDelete = id => {
-    console.log (`handle edit ${id}`);
-  };
+    const filteredItems = this.state.items.filter(item=>
+      item.id !==id);
+      this.setState({
+      items: filteredItems
+  });
+};
   handleEdit = id =>{
-    console.log (`edit edit ${id}`);
-  }
+    const filteredItems = this.state.items.filter(item =>
+      item.id !==id);
+      const selectedItem = this.state.items.find(item =>
+        item.id === id);
+        this.setState({
+          items:filteredItems,
+          item:selectedItem.title,
+          id:id,
+          editItem:true
+        })
+  };
 
 render(){
   return (
     <div className="container">
     <div className="row">
     <div className= ".col-10.mx-auto.col-md-8.mt-5">
-      <h3 classname= "text=capitalize text-center">
-todo input
+      <h3 classname= "text-capitalize text-center">
+Todo Input
       </h3>
       <TodoInput item={this.state.item} 
       handleChange={this.handleChange} 
